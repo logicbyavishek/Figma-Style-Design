@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="shortcut icon" href="./assets/favicon.png" type="image/x-icon">
     <title>Figma</title>
+    <!-- Link to CSS -->
     <link rel="stylesheet" href="./css/style.css">
     <!-- Remix Icon CDN -->
      <link
@@ -13,7 +14,61 @@
     />
 </head>
 <body>
-    <h1>Hello</h1>
+    <!-- Landing Page -->
+    <div class="app">
+
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="logo">
+         <img src="./assets/favicon.png" alt="">
+        <span>Figma</span>
+      </div>
+
+      <input type="text" class="search" placeholder="Search" />
+
+      <nav class="nav">
+        <a href="#" data-route="recents"><i class="ri-time-line"></i> Recents</a>
+        <a href="#" data-route="community"><i class="ri-community-line"></i> Community</a>
+        <a href="#" data-route="drafts"><i class="ri-draft-line"></i> Drafts</a>
+        <a href="#" data-route="projects"><i class="ri-folder-line"></i> All projects</a>
+        <a href="#" data-route="resources"><i class="ri-hourglass-line"></i> Resources</a>
+        <a href="#" data-route="trash"><i class="ri-delete-bin-7-line"></i> Trash</a>
+      </nav>
+    </aside>
+
+    <!-- Main -->
+    <main class="main">
+      
+      <!-- Header -->
+      <header class="topbar">
+        <h1>Designs</h1>
+
+        <button class="top-actions">
+          Create <i class="ri-add-large-line"></i>
+        </button>
+      </header>
+      <hr>
+      <!-- Filters -->
+      <div class="filters">
+        <button>All files</button>
+      </div>
+
+      <!-- Cards -->
+      <section class="cards">
+        <div class="card">
+          <div class="thumbnail dark"></div>
+          <div class="card-info">
+            <h4>Untitled</h4>
+            <p>Edited 32 minutes ago</p>
+          </div>
+        </div>
+      </section>
+
+    </main>
+
+    </div>
+
+    <!-- Link to JavaScript -->
     <script type="module" src="./js/main.js"></script>
 </body>
 </html>
