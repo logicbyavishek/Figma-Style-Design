@@ -6,6 +6,8 @@ import { initResize } from "./resizeElement.js";
 import { initRotate } from "./rotateElement.js";
 import { initTextEditing } from "./editText.js";
 import { initPenTool } from "./penTool.js";
+import { initEraserTool } from "./eraserTool.js";
+
 
 
 
@@ -20,3 +22,4 @@ initResize();
 initRotate();
 initTextEditing(canvas);
 initPenTool(canvas);
+initEraserTool(canvas);

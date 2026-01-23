@@ -590,3 +590,8 @@ body.tool-create-mode * {
   border-radius: 50%;
   pointer-events: none;
 }
+
+/* eraser */
+.canvas-content.eraser-mode {
+  cursor: crosshair;
+}

@@ -11,6 +11,7 @@ const selectableTools = [
   "text",
   "pen",
   "image",
+  "eraser",
 ];
 
 function initToolSelection() {
