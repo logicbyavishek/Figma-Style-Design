@@ -24,6 +24,8 @@ body {
 
   --color-accent: #0d6efd;
   --color-danger: #e03e2f;
+  --rectangle-color: #f3f3f3;
+  --dimed-color: rgba(244, 244, 244, 0.614);
 
   /* Grid */
   --grid-line-color: rgba(255, 255, 255, 0.05);
@@ -378,13 +380,14 @@ body {
 }
 
 .rectangle-element {
-  background: var(--color-accent);
+  background: var(--rectangle-color);
   cursor: move;
   border: 2px solid transparent;
 }
 
 .rectangle-element:hover {
   border-color: var(--color-accent);
+  background: var(--dimed-color);
 }
 
 /* Right Sidebar - Properties */
@@ -520,4 +523,10 @@ textarea {
   background: var(--color-bg-border);
   color: var(--color-accent);
   box-shadow: inset 0 0 0 1px var(--color-accent);
+}
+
+/* When tool is active, force crosshair everywhere */
+body.tool-create-mode,
+body.tool-create-mode * {
+  cursor: crosshair !important;
 }
