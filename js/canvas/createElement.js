@@ -9,6 +9,7 @@ let isCreating = false;
 let startX = 0;
 let startY = 0;
 let previewEl = null;
+const allowedShapes = ["rectangle", "circle", "triangle"];
 
 function initElementCreation(canvas) {
   canvas.addEventListener("mousedown", onMouseDown);
@@ -18,9 +19,9 @@ function initElementCreation(canvas) {
 
 function onMouseDown(e) {
   if (interactionMode) return;
-  
+
   const activeTool = getActiveTool();
-  if (activeTool !== "rectangle") return;
+  if (!allowedShapes.includes(activeTool)) return;
 
   const rect = e.currentTarget.getBoundingClientRect();
 
@@ -30,7 +31,7 @@ function onMouseDown(e) {
 
   // create preview rectangle
   previewEl = document.createElement("div");
-  previewEl.classList.add("rectangle-element");
+  previewEl.classList.add("editor-element", `${activeTool}-element`);
   previewEl.style.position = "absolute";
   previewEl.style.left = `${startX}px`;
   previewEl.style.top = `${startY}px`;

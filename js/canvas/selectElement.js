@@ -10,7 +10,7 @@ function initElementSelection(canvas) {
     (e) => {
       if (interactionMode) return;
 
-      const element = e.target.closest(".rectangle-element");
+      const element = e.target.closest(".editor-element");
 
       if (!element) {
         clearSelection();
