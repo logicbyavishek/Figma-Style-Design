@@ -382,6 +382,7 @@ body {
 .rectangle-element {
   background: var(--rectangle-color);
   cursor: move;
+  position: absolute;
 }
 
 .rectangle-element:hover {
