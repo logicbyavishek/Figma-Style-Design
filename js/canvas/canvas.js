@@ -8,6 +8,7 @@ import { initTextEditing } from "./editText.js";
 import { initPenTool } from "./penTool.js";
 import { initEraserTool } from "./eraserTool.js";
 import { initResetButton } from "./resetCanvas.js";
+import { initImageTool } from "./imageTool.js";
 
 
 
@@ -29,5 +30,5 @@ initTextEditing(canvas);
 initPenTool(canvas);
 initEraserTool(canvas);
 initResetButton(resetBtn,canvas);
+initImageTool(canvas);
 
-  
