@@ -517,3 +517,10 @@ textarea {
 .right-sidebar::-webkit-scrollbar-thumb:hover {
   background: var(--color-bg-hover);
 }
+
+/* css for active tool */
+.tool-btn.active-tool-select {
+  background: var(--color-bg-border);
+  color: var(--color-accent);
+  box-shadow: inset 0 0 0 1px var(--color-accent);
+}
