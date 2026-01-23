@@ -355,30 +355,6 @@ body {
   transform: translate(-50%, -50%);
 }
 
-.text-element {
-    border: 2px solid var(--color-accent);
-  border-radius: var(--radius-s);
-  padding: var(--space-s) var(--space-l);
-  background: rgba(26, 26, 26, 0.9);
-  font-size: var(--font-l);
-  color: var(--color-text-primary);
-  cursor: move;
-  margin-bottom: var(--space-3xl);
-  position: relative;
-}
-
-.text-element::before {
-  content: "";
-  position: absolute;
-  top: -6px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 8px;
-  height: 8px;
-  background: #0d6efd;
-  border-radius: 50%;
-}
-
 .rectangle-element {
   background: var(--rectangle-color);
   cursor: move;
@@ -591,4 +567,12 @@ body.tool-create-mode * {
   border-left: 60px solid transparent;
   border-right: 60px solid transparent;
   border-bottom: 120px solid #e9ecef;
+}
+.text-element {
+  background: #ffffff00;
+  border: 1px dashed #adb5bd;
+  padding: 8px;
+  font-size: 14px;
+  cursor: text;
+  user-select: none;
 }

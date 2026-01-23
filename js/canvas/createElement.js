@@ -9,7 +9,7 @@ let isCreating = false;
 let startX = 0;
 let startY = 0;
 let previewEl = null;
-const allowedShapes = ["rectangle", "circle", "triangle"];
+const allowedShapes = ["rectangle", "circle", "triangle", "text"];
 
 function initElementCreation(canvas) {
   canvas.addEventListener("mousedown", onMouseDown);
@@ -32,6 +32,9 @@ function onMouseDown(e) {
   // create preview rectangle
   previewEl = document.createElement("div");
   previewEl.classList.add("editor-element", `${activeTool}-element`);
+  if (activeTool === "text") {
+    previewEl.textContent = "Double click to edit";
+  }
   previewEl.style.position = "absolute";
   previewEl.style.left = `${startX}px`;
   previewEl.style.top = `${startY}px`;

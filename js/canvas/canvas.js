@@ -4,6 +4,7 @@ import { initElementSelection } from "./selectElement.js";
 import { initDrag } from "./dragElement.js";
 import { initResize } from "./resizeElement.js";
 import { initRotate } from "./rotateElement.js";
+import { initTextEditing } from "./editText.js";
 
 
 
@@ -16,3 +17,4 @@ initElementSelection(canvas);
 initDrag(canvas);
 initResize();
 initRotate();
+initTextEditing(canvas);
