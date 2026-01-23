@@ -2,6 +2,7 @@
 // Responsible ONLY for dragging selected element
 
 import { getSelectedElement } from "./selectElement.js";
+import { interactionMode, setInteraction, clearInteraction } from "./interactionState.js";
 
 let isDragging = false;
 let startX = 0;
@@ -20,7 +21,9 @@ function onMouseDown(e) {
 
   // drag only if clicking the selected element
   if (!selectedEl || e.target !== selectedEl) return;
+  if (interactionMode) return;
 
+  setInteraction("drag");
   isDragging = true;
 
   const rect = selectedEl.getBoundingClientRect();
@@ -53,6 +56,7 @@ function onMouseMove(e) {
 
 function onMouseUp() {
   isDragging = false;
+  clearInteraction();
 }
 
 export { initDrag };

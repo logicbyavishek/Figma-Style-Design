@@ -2,6 +2,8 @@
 // Responsible ONLY for creating elements on canvas
 
 import { getActiveTool, clearActiveTool } from "./selectTool.js";
+import { interactionMode } from "./interactionState.js";
+
 
 let isCreating = false;
 let startX = 0;
@@ -15,6 +17,8 @@ function initElementCreation(canvas) {
 }
 
 function onMouseDown(e) {
+  if (interactionMode) return;
+  
   const activeTool = getActiveTool();
   if (activeTool !== "rectangle") return;
 

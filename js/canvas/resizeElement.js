@@ -2,6 +2,7 @@
 // Responsible ONLY for resizing selected element
 
 import { getSelectedElement } from "./selectElement.js";
+import { interactionMode, setInteraction, clearInteraction } from "./interactionState.js";
 
 let isResizing = false;
 let activeHandle = null;
@@ -17,10 +18,12 @@ function initResize() {
 
 function onMouseDown(e) {
   if (!e.target.classList.contains("resize-handle")) return;
+  if (interactionMode) return;
 
   const el = getSelectedElement();
   if (!el) return;
 
+  setInteraction("resize");
   isResizing = true;
   activeHandle = e.target.dataset.handle;
 
@@ -73,6 +76,7 @@ function onMouseMove(e) {
 function onMouseUp() {
   isResizing = false;
   activeHandle = null;
+  clearInteraction();
 }
 
 export { initResize };

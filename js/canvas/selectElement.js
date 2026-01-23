@@ -1,38 +1,37 @@
 // selectElement.js
-// Responsible ONLY for selecting/deselecting canvas elements
+import { interactionMode } from "./interactionState.js";
 
 let selectedElement = null;
 
 function initElementSelection(canvas) {
-  // Click on element → select
-  canvas.addEventListener("click", (e) => {
-    const target = e.target;
+  //  CAPTURE PHASE selection
+  canvas.addEventListener(
+    "mousedown",
+    (e) => {
+      if (interactionMode) return;
 
-    // Only selectable elements
-    if (!target.classList.contains("rectangle-element")) {
-      clearSelection();
-      return;
-    }
+      const element = e.target.closest(".rectangle-element");
 
-    selectElement(target);
-    e.stopPropagation();
-  });
+      if (!element) {
+        clearSelection();
+        return;
+      }
 
-  // Click on empty canvas → deselect
-  canvas.addEventListener("mousedown", (e) => {
-    if (e.target === canvas) {
-      clearSelection();
-    }
-  });
+      if (element !== selectedElement) {
+        selectElement(element);
+      }
+    },
+    true //  CAPTURE PHASE (CRITICAL)
+  );
 }
 
 function selectElement(el) {
   clearSelection();
-
   el.classList.add("selected");
   selectedElement = el;
 
   addResizeHandles(el);
+  addRotateHandle(el);
 }
 
 function clearSelection() {
@@ -40,6 +39,7 @@ function clearSelection() {
 
   selectedElement.classList.remove("selected");
   removeResizeHandles(selectedElement);
+  removeRotateHandle(selectedElement);
   selectedElement = null;
 }
 
@@ -47,25 +47,25 @@ function getSelectedElement() {
   return selectedElement;
 }
 
+/* helpers unchanged */
 function addResizeHandles(el) {
-  const handles = ["nw", "ne", "sw", "se"];
-
-  handles.forEach(pos => {
-    const handle = document.createElement("div");
-    handle.classList.add("resize-handle", pos);
-    handle.dataset.handle = pos;
-    el.appendChild(handle);
+  ["nw", "ne", "sw", "se"].forEach((pos) => {
+    const h = document.createElement("div");
+    h.classList.add("resize-handle", pos);
+    h.dataset.handle = pos;
+    el.appendChild(h);
   });
+
+  const rotate = document.createElement("div");
+  rotate.classList.add("rotate-handle");
+  el.appendChild(rotate);
 }
 
 function removeResizeHandles(el) {
-  el.querySelectorAll(".resize-handle").forEach(h => h.remove());
+  el.querySelectorAll(".resize-handle").forEach((h) => h.remove());
+}
+function removeRotateHandle(el) {
+  el.querySelectorAll(".rotate-handle").forEach((h) => h.remove());
 }
 
-
-
-export {
-  initElementSelection,
-  getSelectedElement,
-  clearSelection
-};
+export { initElementSelection, getSelectedElement, clearSelection };
