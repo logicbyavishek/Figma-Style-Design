@@ -25,9 +25,17 @@ function initToolSelection() {
   });
 }
 
+function clearActiveTool() {
+  const toolButtons = document.querySelectorAll(".tool-btn");
+  toolButtons.forEach((btn) =>
+    btn.classList.remove("active-tool-select")
+  );
+  activeTool = null;
+}
+
 // getter (read-only access)
 function getActiveTool() {
   return activeTool;
 }
 
-export { initToolSelection, getActiveTool };
+export { initToolSelection, getActiveTool, clearActiveTool };

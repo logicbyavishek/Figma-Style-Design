@@ -378,10 +378,7 @@ body {
 }
 
 .rectangle-element {
-  width: 200px;
-  height: 200px;
   background: var(--color-accent);
-  border-radius: var(--radius-l);
   cursor: move;
   border: 2px solid transparent;
 }
