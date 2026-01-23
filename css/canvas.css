@@ -576,3 +576,17 @@ body.tool-create-mode * {
   cursor: text;
   user-select: none;
 }
+/* pen */
+.pen-layer {
+  position: absolute;
+  inset: 0;
+}
+
+.pen-dot {
+  position: absolute;
+  width: 4px;
+  height: 4px;
+  background: white;
+  border-radius: 50%;
+  pointer-events: none;
+}
