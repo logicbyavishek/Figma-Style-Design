@@ -157,7 +157,16 @@ body {
 .main-content {
   display: flex;
   flex: 1;
-  overflow: hidden;
+  min-height: 0;
+}
+
+.left-sidebar,
+.right-sidebar {
+  min-height: 0;
+}
+
+.right-sidebar {
+  overflow-y: auto;
 }
 
 /* Left Sidebar - Layers */
@@ -370,9 +379,9 @@ body {
   width: var(--properties-width);
   background: var(--color-bg-panel);
   border-left: 1px solid var(--color-bg-border);
-  display: flex;
+  /* display: flex;
   flex-direction: column;
-  overflow-y: auto;
+  overflow-y: auto; */
 }
 
 .properties-content {
