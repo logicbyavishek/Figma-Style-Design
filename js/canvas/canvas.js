@@ -9,6 +9,8 @@ import { initPenTool } from "./penTool.js";
 import { initEraserTool } from "./eraserTool.js";
 import { initResetButton } from "./resetCanvas.js";
 import { initImageTool } from "./imageTool.js";
+import { initLayersPanel } from "./layersPanel.js";
+
 
 
 
@@ -31,4 +33,5 @@ initPenTool(canvas);
 initEraserTool(canvas);
 initResetButton(resetBtn,canvas);
 initImageTool(canvas);
+initLayersPanel(canvas);
 

@@ -32,6 +32,12 @@ function selectElement(el) {
 
   addResizeHandles(el);
   addRotateHandle(el);
+
+  document.dispatchEvent(
+    new CustomEvent("element:selected", {
+        detail: { id: el.dataset.id }
+    })
+  );
 }
 
 function clearSelection() {
@@ -41,6 +47,10 @@ function clearSelection() {
   removeResizeHandles(selectedElement);
   removeRotateHandle(selectedElement);
   selectedElement = null;
+
+  document.dispatchEvent(
+    new CustomEvent("element:deselected")
+  );
 }
 
 function getSelectedElement() {
@@ -68,4 +78,4 @@ function removeRotateHandle(el) {
   el.querySelectorAll(".rotate-handle").forEach((h) => h.remove());
 }
 
-export { initElementSelection, getSelectedElement, clearSelection };
+export { initElementSelection, getSelectedElement, clearSelection , selectElement };
