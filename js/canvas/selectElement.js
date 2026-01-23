@@ -28,20 +28,41 @@ function initElementSelection(canvas) {
 
 function selectElement(el) {
   clearSelection();
+
   el.classList.add("selected");
   selectedElement = el;
+
+  addResizeHandles(el);
 }
 
 function clearSelection() {
-  if (selectedElement) {
-    selectedElement.classList.remove("selected");
-    selectedElement = null;
-  }
+  if (!selectedElement) return;
+
+  selectedElement.classList.remove("selected");
+  removeResizeHandles(selectedElement);
+  selectedElement = null;
 }
 
 function getSelectedElement() {
   return selectedElement;
 }
+
+function addResizeHandles(el) {
+  const handles = ["nw", "ne", "sw", "se"];
+
+  handles.forEach(pos => {
+    const handle = document.createElement("div");
+    handle.classList.add("resize-handle", pos);
+    handle.dataset.handle = pos;
+    el.appendChild(handle);
+  });
+}
+
+function removeResizeHandles(el) {
+  el.querySelectorAll(".resize-handle").forEach(h => h.remove());
+}
+
+
 
 export {
   initElementSelection,
