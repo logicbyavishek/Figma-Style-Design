@@ -7,12 +7,17 @@ import { initRotate } from "./rotateElement.js";
 import { initTextEditing } from "./editText.js";
 import { initPenTool } from "./penTool.js";
 import { initEraserTool } from "./eraserTool.js";
+import { initResetButton } from "./resetCanvas.js";
 
 
 
 
 
 const canvas = document.querySelector(".canvas-content");
+const resetBtn = document.querySelector(".reset-btn");
+
+
+
 
 initToolSelection();
 initElementCreation(canvas);
@@ -23,3 +28,6 @@ initRotate();
 initTextEditing(canvas);
 initPenTool(canvas);
 initEraserTool(canvas);
+initResetButton(resetBtn,canvas);
+
+  
