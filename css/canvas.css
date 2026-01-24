@@ -590,7 +590,7 @@ body.tool-create-mode * {
 .pen-layer {
   position: absolute;
   inset: 0;
-  z-index: 49;
+  /* z-index: 49; */
 }
 
 .pen-dot {
