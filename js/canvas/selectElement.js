@@ -14,20 +14,31 @@ function initElementSelection(canvas) {
 
       const element = e.target.closest(".editor-element");
 
-      // ✅ Click on empty canvas ONLY → deselect
-      if (!element && e.target === canvas) {
-        clearSelection();
+      // ✅ Click on element → select
+      if (element) {
+        if (element !== selectedElement) {
+          selectElement(element);
+        }
         return;
       }
 
-      // ✅ Click on element → select
-      if (element && element !== selectedElement) {
-        selectElement(element);
-      }
+      // ✅ Click anywhere inside canvas but NOT on element → deselect
+      clearSelection();
     },
-    true
+    true // capture phase
   );
+
+  // ✅ Click completely outside canvas → deselect
+  document.addEventListener("mousedown", (e) => {
+    const insideCanvas = e.target.closest(".canvas-content");
+    const element = e.target.closest(".editor-element");
+
+    if (!insideCanvas && !element) {
+      clearSelection();
+    }
+  });
 }
+
 
 function selectElement(el) {
   // clear previous selection

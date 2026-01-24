@@ -12,6 +12,8 @@ import { initImageTool } from "./imageTool.js";
 import { initLayersPanel } from "./layersPanel.js";
 import { initPropertiesPanel } from "./propertiesPanel.js";
 import { saveCanvasState, loadCanvasState } from "./storage.js";
+import { initKeyboardShortcuts } from "./keyboardShortcuts.js";
+
 
 
 const canvas = document.querySelector(".canvas-content");
@@ -50,3 +52,4 @@ initImageTool(canvas, onCanvasActionComplete);
 initLayersPanel(canvas, onCanvasActionComplete);
 
 initPropertiesPanel(onCanvasActionComplete);
+initKeyboardShortcuts(canvas);

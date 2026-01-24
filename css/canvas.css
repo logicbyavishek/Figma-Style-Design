@@ -331,6 +331,7 @@ body {
   align-items: center;
   gap: 16px;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+  z-index: 50;
 }
 
 .zoom-btn {
@@ -589,6 +590,7 @@ body.tool-create-mode * {
 .pen-layer {
   position: absolute;
   inset: 0;
+  z-index: 49;
 }
 
 .pen-dot {
