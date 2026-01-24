@@ -1,10 +1,10 @@
 // resetCanvas.js
-// Handles reset button animation + canvas clearing
+// Handles reset button animation + canvas clearing + save wiring
 
 import { clearSelection } from "./selectElement.js";
 import { clearInteraction } from "./interactionState.js";
 
-function initResetButton(resetBtn, canvas) {
+function initResetButton(resetBtn, canvas, onCanvasActionComplete) {
   resetBtn.addEventListener("click", () => {
     // 1️⃣ Animate button
     resetBtn.classList.add("reset-rotate");
@@ -19,18 +19,23 @@ function initResetButton(resetBtn, canvas) {
 
     // 2️⃣ Clear editor state
     clearEditor(canvas);
+
+    // 3️⃣ Save cleared state
+    if (typeof onCanvasActionComplete === "function") {
+      onCanvasActionComplete();
+    }
   });
 }
 
 function clearEditor(canvas) {
-  // Stop any interaction
+  // Stop interactions
   clearInteraction();
   clearSelection();
 
-  // Remove all shapes
-  canvas.querySelectorAll(".editor-element").forEach(el => el.remove());
+  // Remove all editor elements
+  canvas.querySelectorAll(".editor-element").forEach((el) => el.remove());
 
-  // Remove pen drawings
+  // Clear pen drawings
   const penLayer = canvas.querySelector(".pen-layer");
   if (penLayer) {
     penLayer.innerHTML = "";

@@ -2,13 +2,20 @@
 // Responsible ONLY for rotating selected element
 
 import { getSelectedElement } from "./selectElement.js";
-import { interactionMode, setInteraction, clearInteraction } from "./interactionState.js";
+import {
+  interactionMode,
+  setInteraction,
+  clearInteraction
+} from "./interactionState.js";
 
 let isRotating = false;
 let centerX = 0;
 let centerY = 0;
+let onActionComplete = null;
 
-function initRotate() {
+function initRotate(onCanvasActionComplete) {
+  onActionComplete = onCanvasActionComplete;
+
   document.addEventListener("mousedown", onMouseDown);
   document.addEventListener("mousemove", onMouseMove);
   document.addEventListener("mouseup", onMouseUp);
@@ -20,6 +27,7 @@ function onMouseDown(e) {
 
   const el = getSelectedElement();
   if (!el) return;
+
   setInteraction("rotate");
   isRotating = true;
 
@@ -40,13 +48,19 @@ function onMouseMove(e) {
   const dy = e.clientY - centerY;
 
   const angle = Math.atan2(dy, dx) * (180 / Math.PI);
-
   el.style.transform = `rotate(${angle}deg)`;
 }
 
 function onMouseUp() {
+  if (!isRotating) return;
+
   isRotating = false;
   clearInteraction();
+
+  // ✅ ROTATION COMPLETE → notify canvas
+  if (typeof onActionComplete === "function") {
+    onActionComplete();
+  }
 }
 
 export { initRotate };

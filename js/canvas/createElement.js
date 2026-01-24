@@ -4,14 +4,17 @@
 import { getActiveTool, clearActiveTool } from "./selectTool.js";
 import { interactionMode } from "./interactionState.js";
 
-
 let isCreating = false;
 let startX = 0;
 let startY = 0;
 let previewEl = null;
+let onActionComplete = null;
+
 const allowedShapes = ["rectangle", "circle", "triangle", "text"];
 
-function initElementCreation(canvas) {
+function initElementCreation(canvas, onCanvasActionComplete) {
+  onActionComplete = onCanvasActionComplete;
+
   canvas.addEventListener("mousedown", onMouseDown);
   document.addEventListener("mousemove", onMouseMove);
   document.addEventListener("mouseup", onMouseUp);
@@ -29,12 +32,13 @@ function onMouseDown(e) {
   startX = e.clientX - rect.left;
   startY = e.clientY - rect.top;
 
-  // create preview rectangle
   previewEl = document.createElement("div");
   previewEl.classList.add("editor-element", `${activeTool}-element`);
+
   if (activeTool === "text") {
     previewEl.textContent = "Double click to edit";
   }
+
   previewEl.dataset.id = crypto.randomUUID();
   previewEl.style.position = "absolute";
   previewEl.style.left = `${startX}px`;
@@ -72,6 +76,11 @@ function onMouseUp() {
   if (previewEl) {
     previewEl.style.opacity = "1";
     previewEl = null;
+
+    // ✅ SAVE only after successful creation
+    if (typeof onActionComplete === "function") {
+      onActionComplete();
+    }
   }
 
   clearActiveTool();

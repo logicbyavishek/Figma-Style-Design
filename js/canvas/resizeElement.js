@@ -2,15 +2,22 @@
 // Responsible ONLY for resizing selected element
 
 import { getSelectedElement } from "./selectElement.js";
-import { interactionMode, setInteraction, clearInteraction } from "./interactionState.js";
+import {
+  interactionMode,
+  setInteraction,
+  clearInteraction
+} from "./interactionState.js";
 
 let isResizing = false;
 let activeHandle = null;
 let startX, startY;
 let startWidth, startHeight;
 let startLeft, startTop;
+let onActionComplete = null;
 
-function initResize() {
+function initResize(onCanvasActionComplete) {
+  onActionComplete = onCanvasActionComplete;
+
   document.addEventListener("mousedown", onMouseDown);
   document.addEventListener("mousemove", onMouseMove);
   document.addEventListener("mouseup", onMouseUp);
@@ -56,10 +63,12 @@ function onMouseMove(e) {
 
   if (activeHandle.includes("e")) newWidth = startWidth + dx;
   if (activeHandle.includes("s")) newHeight = startHeight + dy;
+
   if (activeHandle.includes("w")) {
     newWidth = startWidth - dx;
     newLeft = startLeft + dx;
   }
+
   if (activeHandle.includes("n")) {
     newHeight = startHeight - dy;
     newTop = startTop + dy;
@@ -74,9 +83,16 @@ function onMouseMove(e) {
 }
 
 function onMouseUp() {
+  if (!isResizing) return;
+
   isResizing = false;
   activeHandle = null;
   clearInteraction();
+
+  // ✅ SAVE only after resize ends
+  if (typeof onActionComplete === "function") {
+    onActionComplete();
+  }
 }
 
 export { initResize };

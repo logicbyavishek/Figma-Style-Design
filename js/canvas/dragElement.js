@@ -2,7 +2,11 @@
 // Responsible ONLY for dragging selected element
 
 import { getSelectedElement } from "./selectElement.js";
-import { interactionMode, setInteraction, clearInteraction } from "./interactionState.js";
+import {
+  interactionMode,
+  setInteraction,
+  clearInteraction,
+} from "./interactionState.js";
 
 let isDragging = false;
 let startX = 0;
@@ -10,7 +14,12 @@ let startY = 0;
 let startMouseX = 0;
 let startMouseY = 0;
 
-function initDrag(canvas) {
+// 🔗 store callback safely
+let onActionComplete = null;
+
+function initDrag(canvas, onCanvasActionComplete) {
+  onActionComplete = onCanvasActionComplete;
+
   canvas.addEventListener("mousedown", onMouseDown);
   document.addEventListener("mousemove", onMouseMove);
   document.addEventListener("mouseup", onMouseUp);
@@ -44,19 +53,23 @@ function onMouseMove(e) {
   const dx = e.clientX - startMouseX;
   const dy = e.clientY - startMouseY;
 
-  const newX = startX + dx;
-  const newY = startY + dy;
-
   const selectedEl = getSelectedElement();
   if (!selectedEl) return;
 
-  selectedEl.style.left = `${newX}px`;
-  selectedEl.style.top = `${newY}px`;
+  selectedEl.style.left = `${startX + dx}px`;
+  selectedEl.style.top = `${startY + dy}px`;
 }
 
 function onMouseUp() {
+  if (!isDragging) return; // ✅ IMPORTANT
+
   isDragging = false;
   clearInteraction();
+
+  // ✅ save ONLY after real drag
+  if (typeof onActionComplete === "function") {
+    onActionComplete();
+  }
 }
 
 export { initDrag };

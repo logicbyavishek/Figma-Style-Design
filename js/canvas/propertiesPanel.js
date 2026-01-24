@@ -1,7 +1,11 @@
 // propertiesPanel.js
 import { getSelectedElement } from "./selectElement.js";
 
-function initPropertiesPanel() {
+let onActionComplete = null;
+
+function initPropertiesPanel(onCanvasActionComplete) {
+  onActionComplete = onCanvasActionComplete;
+
   const panel = document.querySelector(".right-sidebar");
   const content = document.querySelector(".properties-content");
   const canvas = document.querySelector(".canvas-content");
@@ -61,18 +65,17 @@ function initPropertiesPanel() {
     stopLiveSync();
   });
 
-  // ✅ CORRECT BLANK CANVAS DESELECT (CAPTURE PHASE)
+  // ✅ blank canvas click → deselect UI
   canvas.addEventListener(
     "mousedown",
     (e) => {
-      const clickedElement = e.target.closest(".editor-element");
-      if (!clickedElement) {
+      if (!e.target.closest(".editor-element")) {
         content.style.display = "none";
         empty.style.display = "block";
         stopLiveSync();
       }
     },
-    true // 🔴 capture phase — critical
+    true
   );
 
   // ===== READ FROM CANVAS =====
@@ -106,7 +109,7 @@ function initPropertiesPanel() {
     }
   }
 
-  // ===== WRITE BACK (CLAMPED) =====
+  // ===== WRITE BACK + SAVE =====
   xInput.addEventListener("input", () => applyNumber(xInput, "left", 0));
   yInput.addEventListener("input", () => applyNumber(yInput, "top", 0));
   wInput.addEventListener("input", () => applyNumber(wInput, "width", 1));
@@ -115,31 +118,55 @@ function initPropertiesPanel() {
   rotInput.addEventListener("input", () => {
     const el = getSelectedElement();
     if (!el) return;
+
     const val = clamp(rotInput.value, 0);
     rotInput.value = val;
     el.style.transform = `rotate(${val}deg)`;
+    save();
   });
 
   bgInput.addEventListener("input", () => {
     const el = getSelectedElement();
     if (!el) return;
+
     el.style.backgroundColor = bgInput.value;
     swatch.style.backgroundColor = bgInput.value;
+    save();
   });
 
   radiusInput.addEventListener("input", () => {
     const el = getSelectedElement();
     if (!el) return;
+
     const val = clamp(radiusInput.value, 0);
     radiusInput.value = val;
     el.style.borderRadius = `${val}px`;
+    save();
   });
 
   textInput.addEventListener("input", () => {
     const el = getSelectedElement();
     if (!el || !el.classList.contains("text-element")) return;
+
     el.textContent = textInput.value;
+    save();
   });
+
+  function applyNumber(input, prop, min) {
+    const el = getSelectedElement();
+    if (!el) return;
+
+    const val = clamp(input.value, min);
+    input.value = val;
+    el.style[prop] = `${val}px`;
+    save();
+  }
+
+  function save() {
+    if (typeof onActionComplete === "function") {
+      onActionComplete();
+    }
+  }
 
   // ===== LIVE SYNC =====
   let rafId = null;
@@ -160,14 +187,6 @@ function initPropertiesPanel() {
       cancelAnimationFrame(rafId);
       rafId = null;
     }
-  }
-
-  function applyNumber(input, prop, min) {
-    const el = getSelectedElement();
-    if (!el) return;
-    const val = clamp(input.value, min);
-    input.value = val;
-    el.style[prop] = `${val}px`;
   }
 }
 
@@ -203,7 +222,7 @@ function rgbToHex(rgb) {
   return (
     "#" +
     nums.slice(0, 3)
-      .map(n => parseInt(n).toString(16).padStart(2, "0"))
+      .map((n) => parseInt(n).toString(16).padStart(2, "0"))
       .join("")
   );
 }

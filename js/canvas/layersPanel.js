@@ -1,117 +1,126 @@
 // layersPanel.js
-// Phase 2: Canvas ↔ Layers selection sync (corrected)
+// Canvas ↔ Layers sync + save wiring
 
-import { getSelectedElement , selectElement } from "./selectElement.js";
+import {
+  getSelectedElement,
+  selectElement,
+  clearSelection
+} from "./selectElement.js";
 
-function initLayersPanel(canvas) {
+let onActionComplete = null;
+
+function initLayersPanel(canvas, onCanvasActionComplete) {
+  onActionComplete = onCanvasActionComplete;
+
   const layerList = document.querySelector(".layer-list");
   const layerEmpty = document.querySelector(".layer-empty");
   const layerCount = document.querySelector(".layer-count");
 
   function syncLayers() {
-  const elements = canvas.querySelectorAll(".editor-element");
+    const elements = canvas.querySelectorAll(".editor-element");
 
-  layerCount.textContent = `(${elements.length})`;
+    layerCount.textContent = `(${elements.length})`;
 
-  // Empty state
-  if (elements.length === 0) {
-    layerEmpty.style.display = "block";
-    layerList.style.display = "none";
+    if (elements.length === 0) {
+      layerEmpty.style.display = "block";
+      layerList.style.display = "none";
+      layerList.innerHTML = "";
+      return;
+    }
+
+    layerEmpty.style.display = "none";
+    layerList.style.display = "block";
     layerList.innerHTML = "";
-    return;
+
+    [...elements].reverse().forEach((el) => {
+      const type = getElementType(el);
+      const id = el.dataset.id;
+
+      const item = document.createElement("div");
+      item.className = "layer-item";
+      item.dataset.id = id;
+
+      item.innerHTML = `
+        <span class="layer-icon">${getIcon(type)}</span>
+        <span class="layer-name">${formatName(type)}</span>
+        <div class="layer-actions">
+          <button class="layer-action-btn move-up">
+            <i class="ri-arrow-up-s-line"></i>
+          </button>
+          <button class="layer-action-btn move-down">
+            <i class="ri-arrow-down-s-line"></i>
+          </button>
+          <button class="layer-action-btn delete">
+            <i class="ri-delete-bin-7-line"></i>
+          </button>
+        </div>
+      `;
+
+      // prevent canvas capture mousedown
+      item.addEventListener("mousedown", (e) => e.stopPropagation());
+
+      // select element
+      item.addEventListener("click", () => {
+        selectElement(el);
+      });
+
+      // 🔼 Move up
+      item.querySelector(".move-up").addEventListener("click", (e) => {
+        e.stopPropagation();
+        if (el.nextElementSibling) {
+          canvas.insertBefore(el.nextElementSibling, el);
+          afterChange();
+        }
+      });
+
+      // 🔽 Move down
+      item.querySelector(".move-down").addEventListener("click", (e) => {
+        e.stopPropagation();
+        if (el.previousElementSibling) {
+          canvas.insertBefore(el, el.previousElementSibling);
+          afterChange();
+        }
+      });
+
+      // 🗑 Delete
+      item.querySelector(".delete").addEventListener("click", (e) => {
+        e.stopPropagation();
+        el.remove();
+        clearSelection();
+        afterChange();
+      });
+
+      layerList.appendChild(item);
+    });
+
+    const selectedEl = getSelectedElement();
+    if (selectedEl) {
+      setActiveLayer(selectedEl.dataset.id);
+    }
   }
 
-  layerEmpty.style.display = "none";
-  layerList.style.display = "block";
-  layerList.innerHTML = "";
-
-  // Topmost element first
-  [...elements].reverse().forEach((el) => {
-    const type = getElementType(el);
-    const id = el.dataset.id;
-
-    const item = document.createElement("div");
-    item.className = "layer-item";
-    item.dataset.id = id;
-
-    item.innerHTML = `
-      <span class="layer-icon">${getIcon(type)}</span>
-      <span class="layer-name">${formatName(type)}</span>
-      <div class="layer-actions">
-        <button class="layer-action-btn move-up">
-          <i class="ri-arrow-up-s-line"></i>
-        </button>
-        <button class="layer-action-btn move-down">
-          <i class="ri-arrow-down-s-line"></i>
-        </button>
-        <button class="layer-action-btn delete">
-          <i class="ri-delete-bin-7-line"></i>
-        </button>
-      </div>
-    `;
-
-    // Stop canvas capture-phase mousedown
-    item.addEventListener("mousedown", (e) => {
-      e.stopPropagation();
-    });
-
-    // Click layer → select element (NO drag)
-    item.addEventListener("click", () => {
-      selectElement(el);
-    });
-
-    // 🔼 Move Up (bring forward)
-    item.querySelector(".move-up").addEventListener("click", (e) => {
-      e.stopPropagation();
-      if (el.nextElementSibling) {
-        canvas.insertBefore(el.nextElementSibling, el);
-        syncLayers();
-      }
-    });
-
-    // 🔽 Move Down (send backward)
-    item.querySelector(".move-down").addEventListener("click", (e) => {
-      e.stopPropagation();
-      if (el.previousElementSibling) {
-        canvas.insertBefore(el, el.previousElementSibling);
-        syncLayers();
-      }
-    });
-
-    // 🗑 Delete
-    item.querySelector(".delete").addEventListener("click", (e) => {
-      e.stopPropagation();
-      el.remove();
-      clearSelection();
-      syncLayers();
-    });
-
-    layerList.appendChild(item);
-  });
-
-  // Re-apply active layer after rebuild
-  const selectedEl = getSelectedElement();
-  if (selectedEl) {
-    setActiveLayer(selectedEl.dataset.id);
+  function afterChange() {
+    syncLayers();
+    save();
   }
-}
 
+  function save() {
+    if (typeof onActionComplete === "function") {
+      onActionComplete();
+    }
+  }
 
-  // Observe canvas element changes
+  // observe add/remove
   const observer = new MutationObserver(syncLayers);
   observer.observe(canvas, { childList: true });
 
-  // Initial render
   syncLayers();
 
-  // Canvas → Layers selection sync
   document.addEventListener("element:selected", (e) => {
     setActiveLayer(e.detail.id);
   });
 
-  document.addEventListener("element:deselected", () => {
-    clearActiveLayer();
-  });
+  document.addEventListener("element:deselected", clearActiveLayer);
 }
 
 /* ---------- helpers ---------- */
@@ -151,19 +160,5 @@ function clearActiveLayer() {
     item.classList.remove("active");
   });
 }
-
-function moveNode(node, direction) {
-  if (!node) return;
-
-  if (direction === "up" && node.nextElementSibling) {
-    node.parentNode.insertBefore(node.nextElementSibling, node);
-  }
-
-  if (direction === "down" && node.previousElementSibling) {
-    node.parentNode.insertBefore(node, node.previousElementSibling);
-  }
-}
-
-
 
 export { initLayersPanel };

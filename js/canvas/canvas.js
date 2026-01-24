@@ -1,4 +1,4 @@
-import { initToolSelection, getActiveTool } from "./selectTool.js";
+import { initToolSelection } from "./selectTool.js";
 import { initElementCreation } from "./createElement.js";
 import { initElementSelection } from "./selectElement.js";
 import { initDrag } from "./dragElement.js";
@@ -11,27 +11,42 @@ import { initResetButton } from "./resetCanvas.js";
 import { initImageTool } from "./imageTool.js";
 import { initLayersPanel } from "./layersPanel.js";
 import { initPropertiesPanel } from "./propertiesPanel.js";
-
-
-
+import { saveCanvasState, loadCanvasState } from "./storage.js";
 
 
 const canvas = document.querySelector(".canvas-content");
 const resetBtn = document.querySelector(".reset-btn");
 
+loadCanvasState(canvas);
 
+/**
+ * CENTRAL SAVE HOOK
+ * Call this ONLY when an action is finished
+ */
+function onCanvasActionComplete() {
+  saveCanvasState(canvas);
+}
 
+/* ---------- INIT WIRES ---------- */
 
 initToolSelection();
-initElementCreation(canvas);
+
+initElementCreation(canvas, onCanvasActionComplete);
 initElementSelection(canvas);
-initPropertiesPanel();
-initDrag(canvas);
-initResize();
-initRotate();
-initTextEditing(canvas);
-initPenTool(canvas);
-initEraserTool(canvas);
-initResetButton(resetBtn,canvas);
-initImageTool(canvas);
-initLayersPanel(canvas);
+
+initDrag(canvas, onCanvasActionComplete);
+initResize(onCanvasActionComplete);
+initRotate(onCanvasActionComplete);
+
+initTextEditing(canvas, onCanvasActionComplete);
+
+initPenTool(canvas, onCanvasActionComplete);
+initEraserTool(canvas, onCanvasActionComplete);
+
+initResetButton(resetBtn, canvas, onCanvasActionComplete);
+
+initImageTool(canvas, onCanvasActionComplete);
+
+initLayersPanel(canvas, onCanvasActionComplete);
+
+initPropertiesPanel(onCanvasActionComplete);
