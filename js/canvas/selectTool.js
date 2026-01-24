@@ -6,7 +6,6 @@ let activeTool = null;
 // tools that are allowed to be selected
 const selectableTools = [
   "rectangle",
-  "triangle",
   "circle",
   "text",
   "pen",

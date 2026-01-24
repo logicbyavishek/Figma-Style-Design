@@ -7,7 +7,7 @@
     <link rel="shortcut icon" href="./assets/favicon.png" type="image/x-icon" />
     <title>Figma</title>
     <!-- Link to CSS -->
-    <link rel="stylesheet" href="./css/style.css" />
+    <link rel="stylesheet" href="./css/style-responsive.css">
     <!-- Remix Icon CDN -->
     <link
       href="https://cdn.jsdelivr.net/npm/remixicon@4.8.0/fonts/remixicon.css"
@@ -15,10 +15,20 @@
     />
   </head>
   <body>
+    <!-- Loading Screen -->
+    <div class="loading-screen" id="loadingScreen">
+      <i class="ri-figma-line loading-icon"></i>
+    </div>
+
     <!-- Landing Page -->
-    <div class="app">
+    <div class="app" id="app">
+      <!-- Mobile Menu Toggle -->
+      <button class="menu-toggle" id="menuToggle">
+        <i class="ri-menu-line"></i>
+      </button>
+
       <!-- Sidebar -->
-      <aside class="sidebar">
+      <aside class="sidebar" id="sidebar">
         <div class="logo">
           <img src="./assets/favicon.png" alt="" />
           <span>Figma</span>
@@ -27,26 +37,29 @@
         <input type="text" class="search" placeholder="Search" />
 
         <nav class="nav">
-          <a href="#" data-route="recents"
-            ><i class="ri-time-line"></i> Recents</a
-          >
-          <a href="#" data-route="community"
-            ><i class="ri-community-line"></i> Community</a
-          >
-          <a href="#" data-route="drafts"
-            ><i class="ri-draft-line"></i> Drafts</a
-          >
-          <a href="#" data-route="projects"
-            ><i class="ri-folder-line"></i> All projects</a
-          >
-          <a href="#" data-route="resources"
-            ><i class="ri-hourglass-line"></i> Resources</a
-          >
-          <a href="#" data-route="trash"
-            ><i class="ri-delete-bin-7-line"></i> Trash</a
-          >
+          <a href="#" data-route="recents">
+            <i class="ri-time-line"></i> Recents
+          </a>
+          <a href="#" data-route="community">
+            <i class="ri-community-line"></i> Community
+          </a>
+          <a href="#" data-route="drafts">
+            <i class="ri-draft-line"></i> Drafts
+          </a>
+          <a href="#" data-route="projects">
+            <i class="ri-folder-line"></i> All projects
+          </a>
+          <a href="#" data-route="resources">
+            <i class="ri-hourglass-line"></i> Resources
+          </a>
+          <a href="#" data-route="trash">
+            <i class="ri-delete-bin-7-line"></i> Trash
+          </a>
         </nav>
       </aside>
+
+      <!-- Sidebar Overlay for Mobile -->
+      <div class="sidebar-overlay" id="sidebarOverlay"></div>
 
       <!-- Main -->
       <main class="main">
@@ -54,7 +67,7 @@
         <header class="topbar">
           <h1>Designs</h1>
 
-          <button class="top-actions">
+          <button class="top-actions" id="createBtn">
             Create <i class="ri-add-large-line"></i>
           </button>
         </header>
@@ -66,11 +79,14 @@
 
         <!-- Cards -->
         <section class="cards">
-          <div class="card">
-            <div class="thumbnail dark"></div>
+          <!-- New Project Card -->
+          <div class="card" id="newProjectCard">
+            <div class="thumbnail new-project">
+              <i class="ri-add-large-fill"></i>
+            </div>
             <div class="card-info">
-              <h4>Untitled</h4>
-              <p>Edited 32 minutes ago</p>
+              <h4>New Project</h4>
+              <p>Click to create a new design</p>
             </div>
           </div>
         </section>
