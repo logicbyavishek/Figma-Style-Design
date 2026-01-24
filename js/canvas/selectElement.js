@@ -1,10 +1,12 @@
 // selectElement.js
+// Responsible ONLY for selection lifecycle
+
 import { interactionMode } from "./interactionState.js";
 
 let selectedElement = null;
 
 function initElementSelection(canvas) {
-  //  CAPTURE PHASE selection
+  // Capture phase so selection wins over drag/resize
   canvas.addEventListener(
     "mousedown",
     (e) => {
@@ -12,30 +14,37 @@ function initElementSelection(canvas) {
 
       const element = e.target.closest(".editor-element");
 
-      if (!element) {
+      // ✅ Click on empty canvas ONLY → deselect
+      if (!element && e.target === canvas) {
         clearSelection();
         return;
       }
 
-      if (element !== selectedElement) {
+      // ✅ Click on element → select
+      if (element && element !== selectedElement) {
         selectElement(element);
       }
     },
-    true //  CAPTURE PHASE (CRITICAL)
+    true
   );
 }
 
 function selectElement(el) {
+  // clear previous selection
   clearSelection();
+
+  // mark selected
   el.classList.add("selected");
   selectedElement = el;
 
+  // add UI handles
   addResizeHandles(el);
   addRotateHandle(el);
 
+  // 🔔 notify rest of system
   document.dispatchEvent(
     new CustomEvent("element:selected", {
-        detail: { id: el.dataset.id }
+      detail: { id: el.dataset.id },
     })
   );
 }
@@ -57,7 +66,10 @@ function getSelectedElement() {
   return selectedElement;
 }
 
-/* helpers unchanged */
+/* =========================
+   Helpers (LOCAL ONLY)
+   ========================= */
+
 function addResizeHandles(el) {
   ["nw", "ne", "sw", "se"].forEach((pos) => {
     const h = document.createElement("div");
@@ -65,17 +77,25 @@ function addResizeHandles(el) {
     h.dataset.handle = pos;
     el.appendChild(h);
   });
-
-  const rotate = document.createElement("div");
-  rotate.classList.add("rotate-handle");
-  el.appendChild(rotate);
 }
 
 function removeResizeHandles(el) {
   el.querySelectorAll(".resize-handle").forEach((h) => h.remove());
 }
+
+function addRotateHandle(el) {
+  const handle = document.createElement("div");
+  handle.classList.add("rotate-handle");
+  el.appendChild(handle);
+}
+
 function removeRotateHandle(el) {
   el.querySelectorAll(".rotate-handle").forEach((h) => h.remove());
 }
 
-export { initElementSelection, getSelectedElement, clearSelection , selectElement };
+export {
+  initElementSelection,
+  getSelectedElement,
+  clearSelection,
+  selectElement,
+};

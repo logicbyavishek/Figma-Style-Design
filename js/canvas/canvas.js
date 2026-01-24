@@ -10,7 +10,7 @@ import { initEraserTool } from "./eraserTool.js";
 import { initResetButton } from "./resetCanvas.js";
 import { initImageTool } from "./imageTool.js";
 import { initLayersPanel } from "./layersPanel.js";
-
+import { initPropertiesPanel } from "./propertiesPanel.js";
 
 
 
@@ -25,6 +25,7 @@ const resetBtn = document.querySelector(".reset-btn");
 initToolSelection();
 initElementCreation(canvas);
 initElementSelection(canvas);
+initPropertiesPanel();
 initDrag(canvas);
 initResize();
 initRotate();
@@ -34,4 +35,3 @@ initEraserTool(canvas);
 initResetButton(resetBtn,canvas);
 initImageTool(canvas);
 initLayersPanel(canvas);
-

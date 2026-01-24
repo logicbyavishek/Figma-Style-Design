@@ -97,7 +97,7 @@
             <!-- Type -->
             <div class="property-section">
               <div class="property-label">TYPE</div>
-              <div class="property-value">Text</div>
+              <div class="property-value" id="prop-type">Text</div>
             </div>
 
             <!-- Position -->
@@ -106,11 +106,11 @@
               <div class="property-row">
                 <div class="property-input">
                   <label class="property-input-label">X</label>
-                  <input type="number" value="109" />
+                  <input type="number" id="prop-x" />
                 </div>
                 <div class="property-input">
                   <label class="property-input-label">Y</label>
-                  <input type="number" value="151" />
+                  <input type="number" id="prop-y" />
                 </div>
               </div>
             </div>
@@ -121,11 +121,11 @@
               <div class="property-row">
                 <div class="property-input">
                   <label class="property-input-label">Width</label>
-                  <input type="number" value="200" />
+                  <input type="number" id="prop-width" />
                 </div>
                 <div class="property-input">
                   <label class="property-input-label">Height</label>
-                  <input type="number" value="50" />
+                  <input type="number" id="prop-height" />
                 </div>
               </div>
             </div>
@@ -134,7 +134,7 @@
             <div class="property-section">
               <div class="property-label">ROTATION</div>
               <div class="property-input" style="position: relative">
-                <input type="number" value="0" />
+                <input type="number" id="prop-rotation" />
                 <span class="unit-suffix">Deg</span>
               </div>
             </div>
@@ -144,7 +144,7 @@
               <div class="property-label">BACKGROUND</div>
               <div class="color-input-group">
                 <div class="color-swatch"></div>
-                <input type="text" class="color-code" value="#2A2D35" />
+                <input type="text" class="color-code" id="prop-bg" />
               </div>
             </div>
 
@@ -152,15 +152,15 @@
             <div class="property-section">
               <div class="property-label">CORNER RADIUS</div>
               <div class="property-input" style="position: relative">
-                <input type="number" value="4" />
+                <input type="number" id="prop-radius" />
                 <span class="unit-suffix">px</span>
               </div>
             </div>
 
             <!-- Text Content -->
-            <div class="property-section">
+            <div class="property-section" id="text-section">
               <div class="property-label">TEXT CONTENT</div>
-              <textarea>Edit me</textarea>
+              <textarea id="prop-text">Edit me</textarea>
             </div>
           </div>
         </div>

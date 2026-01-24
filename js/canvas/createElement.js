@@ -35,6 +35,7 @@ function onMouseDown(e) {
   if (activeTool === "text") {
     previewEl.textContent = "Double click to edit";
   }
+  previewEl.dataset.id = crypto.randomUUID();
   previewEl.style.position = "absolute";
   previewEl.style.left = `${startX}px`;
   previewEl.style.top = `${startY}px`;

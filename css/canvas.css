@@ -641,3 +641,17 @@ body.tool-create-mode * {
   color: var(--color-text-muted);
   text-align: center;
 }
+
+/* .properties-empty {
+  padding: 16px;
+  font-size: 13px;
+  color: var(--color-text-muted);
+  text-align: center;
+} */
+
+.properties-empty {
+  padding: 16px;
+  font-size: 13px;
+  color: #888;
+  text-align: center;
+}
