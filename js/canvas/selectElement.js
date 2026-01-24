@@ -6,7 +6,11 @@ import { interactionMode } from "./interactionState.js";
 let selectedElement = null;
 
 function initElementSelection(canvas) {
-  // Capture phase so selection wins over drag/resize
+  /**
+   * CANVAS HANDLER (capture phase)
+   * - select element
+   * - deselect on blank canvas
+   */
   canvas.addEventListener(
     "mousedown",
     (e) => {
@@ -22,37 +26,45 @@ function initElementSelection(canvas) {
         return;
       }
 
-      // ✅ Click anywhere inside canvas but NOT on element → deselect
+      // ✅ Click on blank canvas → deselect
       clearSelection();
     },
-    true // capture phase
+    true // 🔴 capture phase is REQUIRED
   );
 
-  // ✅ Click completely outside canvas → deselect
+  /**
+   * GLOBAL HANDLER
+   * - deselect ONLY if clicking outside canvas AND outside panels
+   */
   document.addEventListener("mousedown", (e) => {
     const insideCanvas = e.target.closest(".canvas-content");
-    const element = e.target.closest(".editor-element");
+    const insideRightPanel = e.target.closest(".right-sidebar");
+    const insideLeftPanel = e.target.closest(".left-sidebar");
 
-    if (!insideCanvas && !element) {
-      clearSelection();
-    }
+    // ❌ Ignore clicks inside UI panels
+    if (insideRightPanel || insideLeftPanel) return;
+
+    // ❌ Ignore clicks inside canvas (handled above)
+    if (insideCanvas) return;
+
+    // ✅ Truly outside editor → deselect
+    clearSelection();
   });
 }
 
+/* =========================
+   Selection API
+   ========================= */
 
 function selectElement(el) {
-  // clear previous selection
   clearSelection();
 
-  // mark selected
   el.classList.add("selected");
   selectedElement = el;
 
-  // add UI handles
   addResizeHandles(el);
   addRotateHandle(el);
 
-  // 🔔 notify rest of system
   document.dispatchEvent(
     new CustomEvent("element:selected", {
       detail: { id: el.dataset.id },
@@ -68,9 +80,7 @@ function clearSelection() {
   removeRotateHandle(selectedElement);
   selectedElement = null;
 
-  document.dispatchEvent(
-    new CustomEvent("element:deselected")
-  );
+  document.dispatchEvent(new CustomEvent("element:deselected"));
 }
 
 function getSelectedElement() {

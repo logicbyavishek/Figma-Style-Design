@@ -8,7 +8,6 @@ function initPropertiesPanel(onCanvasActionComplete) {
 
   const panel = document.querySelector(".right-sidebar");
   const content = document.querySelector(".properties-content");
-  const canvas = document.querySelector(".canvas-content");
 
   // ===== EMPTY STATE =====
   const empty = document.createElement("div");
@@ -51,7 +50,7 @@ function initPropertiesPanel(onCanvasActionComplete) {
     bgInput.dispatchEvent(new Event("input"));
   });
 
-  // ===== SELECTION EVENTS =====
+  // ===== SELECTION EVENTS (SINGLE SOURCE OF TRUTH) =====
   document.addEventListener("element:selected", () => {
     content.style.display = "block";
     empty.style.display = "none";
@@ -64,19 +63,6 @@ function initPropertiesPanel(onCanvasActionComplete) {
     empty.style.display = "block";
     stopLiveSync();
   });
-
-  // ✅ blank canvas click → deselect UI
-  canvas.addEventListener(
-    "mousedown",
-    (e) => {
-      if (!e.target.closest(".editor-element")) {
-        content.style.display = "none";
-        empty.style.display = "block";
-        stopLiveSync();
-      }
-    },
-    true
-  );
 
   // ===== READ FROM CANVAS =====
   function syncFromCanvas() {
