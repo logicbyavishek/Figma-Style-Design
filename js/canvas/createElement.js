@@ -1,0 +1,89 @@
+// createElement.js
+// Responsible ONLY for creating elements on canvas
+
+import { getActiveTool, clearActiveTool } from "./selectTool.js";
+import { interactionMode } from "./interactionState.js";
+
+let isCreating = false;
+let startX = 0;
+let startY = 0;
+let previewEl = null;
+let onActionComplete = null;
+
+const allowedShapes = ["rectangle", "circle", "triangle", "text"];
+
+function initElementCreation(canvas, onCanvasActionComplete) {
+  onActionComplete = onCanvasActionComplete;
+
+  canvas.addEventListener("mousedown", onMouseDown);
+  document.addEventListener("mousemove", onMouseMove);
+  document.addEventListener("mouseup", onMouseUp);
+}
+
+function onMouseDown(e) {
+  if (interactionMode) return;
+
+  const activeTool = getActiveTool();
+  if (!allowedShapes.includes(activeTool)) return;
+
+  const rect = e.currentTarget.getBoundingClientRect();
+
+  isCreating = true;
+  startX = e.clientX - rect.left;
+  startY = e.clientY - rect.top;
+
+  previewEl = document.createElement("div");
+  previewEl.classList.add("editor-element", `${activeTool}-element`);
+
+  if (activeTool === "text") {
+    previewEl.textContent = "Double click to edit";
+  }
+
+  previewEl.dataset.id = crypto.randomUUID();
+  previewEl.style.position = "absolute";
+  previewEl.style.left = `${startX}px`;
+  previewEl.style.top = `${startY}px`;
+  previewEl.style.width = "0px";
+  previewEl.style.height = "0px";
+  previewEl.style.opacity = "0.5";
+
+  e.currentTarget.appendChild(previewEl);
+}
+
+function onMouseMove(e) {
+  if (!isCreating || !previewEl) return;
+
+  const canvas = previewEl.parentElement;
+  const rect = canvas.getBoundingClientRect();
+
+  const currentX = e.clientX - rect.left;
+  const currentY = e.clientY - rect.top;
+
+  const width = Math.abs(currentX - startX);
+  const height = Math.abs(currentY - startY);
+
+  previewEl.style.width = `${width}px`;
+  previewEl.style.height = `${height}px`;
+  previewEl.style.left = `${Math.min(startX, currentX)}px`;
+  previewEl.style.top = `${Math.min(startY, currentY)}px`;
+}
+
+function onMouseUp() {
+  if (!isCreating) return;
+
+  isCreating = false;
+
+  if (previewEl) {
+    previewEl.style.opacity = "1";
+    previewEl = null;
+
+    // ✅ SAVE only after successful creation
+    if (typeof onActionComplete === "function") {
+      onActionComplete();
+    }
+  }
+
+  clearActiveTool();
+}
+
+export { initElementCreation };

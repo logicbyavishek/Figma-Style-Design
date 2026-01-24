@@ -21,29 +21,21 @@
           <div class="logo">
             <img src="./assets/favicon.png" alt="Logo" />
           </div>
-          <span class="app-name">Untitled</span>
+          <span class="app-name" title="file-Name"><h1>FIGMA</h1></span>
           <div class="header-tools">
-            <button class="tool-btn">
-              <i class="ri-arrow-go-back-line"></i>
-            </button>
-            <button class="tool-btn">
-              <i class="ri-arrow-go-forward-fill"></i>
-            </button>
-            <button class="tool-btn">
-              <i class="ri-checkbox-blank-line"></i>
-            </button>
-            <button class="tool-btn"><i class="ri-text-snippet"></i></button>
-            <button class="tool-btn"><i class="ri-image-add-line"></i></button>
-            <button class="tool-btn">
-              <i class="ri-pencil-ai-2-fill"></i>
-            </button>
-            <button class="tool-btn"><i class="ri-triangle-line"></i></button>
+            <button class="tool-btn reset-btn" title="reset"><i class="ri-restart-line"></i></button>
+            <button class="tool-btn" title="rectangle"><i class="ri-checkbox-blank-line"></i></button>
+            <button class="tool-btn" title="triangle"><i class="ri-triangle-line"></i></button>
+            <button class="tool-btn" title="circle"><i class="ri-checkbox-blank-circle-line"></i></button>
+            <button class="tool-btn" title="text"><i class="ri-text-snippet"></i></button>
+            <button class="tool-btn" title="pen"><i class="ri-pencil-ai-2-fill"></i></button>
+            <button class="tool-btn" title="eraser"><i class="ri-eraser-line"></i></button>
+            <button class="tool-btn" title="image"><i class="ri-image-add-line"></i></button>
           </div>
         </div>
         <div class="header-right">
-          <button class="tool-btn"><i class="ri-export-line"></i></button>
-          <button class="tool-btn"><i class="ri-html5-line"></i></button>
-          <button class="tool-btn"><i class="ri-file-code-line"></i></button>
+          <button class="tool-btn export-json" title="export json"><i class="ri-export-line"></i></button>
+          <button class="tool-btn export-html" title="export html"><i class="ri-html5-line"></i></button>
           <button class="close-canvas">Close</button>
         </div>
       </div>
@@ -55,31 +47,16 @@
           <div class="panel-header">
             <div>
               <span class="panel-title">LAYERS</span>
-              <span class="layer-count">(2)</span>
+              <span class="layer-count">(0)</span>
             </div>
             <button class="close-btn"><i class="ri-close-line"></i></button>
           </div>
-          <div class="layer-list">
-            <div class="layer-item active">
-              <span class="layer-icon"><i class="ri-text"></i></span>
-              <span class="layer-name">Edit me</span>
-              <div class="layer-actions">
-                <button class="layer-action-btn">
-                  <i class="ri-arrow-up-s-line"></i>
-                </button>
-                <button class="layer-action-btn">
-                  <i class="ri-arrow-down-s-line"></i>
-                </button>
-                <button class="layer-action-btn">
-                  <i class="ri-delete-bin-7-line"></i>
-                </button>
-              </div>
+          
+          <div class="layer-empty">
+              Please create an element first
             </div>
+          <div class="layer-list">
             <div class="layer-item">
-              <span class="layer-icon"
-                ><i class="ri-checkbox-blank-line"></i
-              ></span>
-              <span class="layer-name">Rectangle</span>
             </div>
           </div>
         </div>
@@ -90,17 +67,23 @@
 
           <div class="canvas-toolbar">
             <button class="zoom-btn"><i class="ri-add-line"></i></button>
-            <span class="zoom-value">69%</span>
+            <span class="zoom-value"><h4>69 %</h4></span>
             <button class="zoom-btn"><i class="ri-subtract-line"></i></button>
           </div>
 
           <div class="canvas-content">
-            <div class="design-element">
-              <div class="text-element">Edit me</div>
-              <div class="rectangle-element"></div>
-            </div>
-          </div>
+            <div class="pen-layer"></div>
+            <div class="design-element"></div>
+            
         </div>
+      </div>
+        <input
+          type="file"
+          id="image-input"
+          accept="image/*"
+          style="display: none"
+        />
+
 
         <!-- Right Sidebar - Properties -->
         <div class="right-sidebar">
@@ -113,7 +96,7 @@
             <!-- Type -->
             <div class="property-section">
               <div class="property-label">TYPE</div>
-              <div class="property-value">Text</div>
+              <div class="property-value" id="prop-type">Text</div>
             </div>
 
             <!-- Position -->
@@ -122,11 +105,11 @@
               <div class="property-row">
                 <div class="property-input">
                   <label class="property-input-label">X</label>
-                  <input type="number" value="109" />
+                  <input type="number" id="prop-x" />
                 </div>
                 <div class="property-input">
                   <label class="property-input-label">Y</label>
-                  <input type="number" value="151" />
+                  <input type="number" id="prop-y" />
                 </div>
               </div>
             </div>
@@ -137,11 +120,11 @@
               <div class="property-row">
                 <div class="property-input">
                   <label class="property-input-label">Width</label>
-                  <input type="number" value="200" />
+                  <input type="number" id="prop-width" />
                 </div>
                 <div class="property-input">
                   <label class="property-input-label">Height</label>
-                  <input type="number" value="50" />
+                  <input type="number" id="prop-height" />
                 </div>
               </div>
             </div>
@@ -150,8 +133,8 @@
             <div class="property-section">
               <div class="property-label">ROTATION</div>
               <div class="property-input" style="position: relative">
-                <input type="number" value="0" />
-                <span class="unit-suffix">°</span>
+                <input type="number" id="prop-rotation" />
+                <span class="unit-suffix">Deg</span>
               </div>
             </div>
 
@@ -160,7 +143,7 @@
               <div class="property-label">BACKGROUND</div>
               <div class="color-input-group">
                 <div class="color-swatch"></div>
-                <input type="text" class="color-code" value="#2A2D35" />
+                <input type="text" class="color-code" id="prop-bg" />
               </div>
             </div>
 
@@ -168,15 +151,15 @@
             <div class="property-section">
               <div class="property-label">CORNER RADIUS</div>
               <div class="property-input" style="position: relative">
-                <input type="number" value="4" />
+                <input type="number" id="prop-radius" />
                 <span class="unit-suffix">px</span>
               </div>
             </div>
 
             <!-- Text Content -->
-            <div class="property-section">
+            <div class="property-section" id="text-section">
               <div class="property-label">TEXT CONTENT</div>
-              <textarea>Edit me</textarea>
+              <textarea id="prop-text">Edit me</textarea>
             </div>
           </div>
         </div>
