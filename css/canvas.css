@@ -657,3 +657,7 @@ body.tool-create-mode * {
   color: #888;
   text-align: center;
 }
+
+.tool-btn:active {
+  transform: scale(0.95);
+}

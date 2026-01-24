@@ -78,4 +78,12 @@ function loadCanvasState(canvas) {
   });
 }
 
-export { saveCanvasState, loadCanvasState };
+/* =============== Get Canvas State ============*/
+function getCanvasState() {
+  const raw = localStorage.getItem(STORAGE_KEY);
+  if (!raw) return null;
+  return JSON.parse(raw);
+}
+
+
+export { saveCanvasState, loadCanvasState , getCanvasState };

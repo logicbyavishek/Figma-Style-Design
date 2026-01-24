@@ -13,6 +13,7 @@ import { initLayersPanel } from "./layersPanel.js";
 import { initPropertiesPanel } from "./propertiesPanel.js";
 import { saveCanvasState, loadCanvasState } from "./storage.js";
 import { initKeyboardShortcuts } from "./keyboardShortcuts.js";
+import { exportJSON, exportHTML } from "./exportManager.js";
 
 
 
@@ -53,3 +54,27 @@ initLayersPanel(canvas, onCanvasActionComplete);
 
 initPropertiesPanel(onCanvasActionComplete);
 initKeyboardShortcuts(canvas);
+
+/* ---------- EXPORT & CLOSE ---------- */
+
+document
+  .querySelector(".export-json")
+  .addEventListener("click", () => {
+    exportJSON();
+  });
+
+document
+  .querySelector(".export-html")
+  .addEventListener("click", () => {
+    exportHTML();
+  });
+
+document
+  .querySelector(".close-canvas")
+  .addEventListener("click", () => {
+    // save before leaving
+    saveCanvasState(canvas);
+
+    // redirect
+    window.location.href = "index.html";
+  });
