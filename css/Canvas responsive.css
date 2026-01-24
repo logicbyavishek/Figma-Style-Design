@@ -45,6 +45,10 @@ body {
   --header-height: 56px;
   --sidebar-width: 260px;
   --properties-width: 320px;
+  
+  /* Mobile specific heights */
+  --mobile-layers-height: 150px;
+  --mobile-properties-height: 200px;
 
   /* Radius */
   --radius-xs: 3px;
@@ -89,6 +93,8 @@ body {
   padding: var(--space-m) var(--space-l);
   height: var(--header-height);
   flex-wrap: wrap;
+  position: relative;
+  z-index: 100;
 }
 
 
@@ -202,6 +208,7 @@ body {
   justify-content: space-between;
   padding: 16px;
   border-bottom: 1px solid #2a2a2a;
+  flex-shrink: 0;
 }
 
 .panel-title {
@@ -236,6 +243,7 @@ body {
 .layer-list {
   padding: 8px;
   overflow-y: auto;
+  flex: 1;
 }
 
 .layer-item {
@@ -367,11 +375,15 @@ body {
   background: var(--color-bg-panel);
   border-left: 1px solid var(--color-bg-border);
   transition: transform 0.3s ease;
+  display: flex;
+  flex-direction: column;
 }
 
 .properties-content {
   padding: 16px;
   display: none;
+  overflow-y: auto;
+  flex: 1;
 }
 
 .property-section {
@@ -477,24 +489,28 @@ textarea {
 
 /* Scrollbar */
 .right-sidebar::-webkit-scrollbar,
-.layer-list::-webkit-scrollbar {
-  width: 8px;
+.layer-list::-webkit-scrollbar,
+.properties-content::-webkit-scrollbar {
+  width: 6px;
 }
 
 .right-sidebar::-webkit-scrollbar-track,
-.layer-list::-webkit-scrollbar-track {
+.layer-list::-webkit-scrollbar-track,
+.properties-content::-webkit-scrollbar-track {
   background: var(--color-bg-panel);
 }
 
 .right-sidebar::-webkit-scrollbar-thumb,
-.layer-list::-webkit-scrollbar-thumb {
+.layer-list::-webkit-scrollbar-thumb,
+.properties-content::-webkit-scrollbar-thumb {
   background: var(--color-bg-hover);
   border-radius: 4px;
 }
 
 .right-sidebar::-webkit-scrollbar-thumb:hover,
-.layer-list::-webkit-scrollbar-thumb:hover {
-  background: var(--color-bg-hover);
+.layer-list::-webkit-scrollbar-thumb:hover,
+.properties-content::-webkit-scrollbar-thumb:hover {
+  background: #3a3a3a;
 }
 
 /* css for active tool */
@@ -695,11 +711,19 @@ body.tool-create-mode * {
 /* Tablet (Portrait) - 768px and below */
 @media screen and (max-width: 768px) {
   :root {
-    --sidebar-width: 200px;
-    --properties-width: 260px;
+    --sidebar-width: 240px;
+    --properties-width: 280px;
+    --mobile-layers-height: 140px;
+    --mobile-properties-height: 220px;
+  }
+
+  .container {
+    display: flex;
+    flex-direction: column;
   }
 
   .header {
+    flex-shrink: 0;
     gap: 8px;
   }
 
@@ -727,70 +751,80 @@ body.tool-create-mode * {
     font-size: 12px;
   }
 
-  /* Make sidebars overlay on mobile instead of shrinking */
-  .left-sidebar,
-  .right-sidebar {
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    z-index: 100;
-    box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+  /* Mobile Layout: Header > Layers > Canvas > Properties */
+  .main-content {
+    flex-direction: column;
+    flex: 1;
+    overflow: hidden;
   }
 
+  /* Layers - Fixed height at top */
   .left-sidebar {
-    left: 0;
-    transform: translateX(-100%);
-  }
-
-  .left-sidebar.open {
-    transform: translateX(0);
-  }
-
-  .right-sidebar {
-    right: 0;
-    transform: translateX(100%);
-  }
-
-  .right-sidebar.open {
-    transform: translateX(0);
-  }
-
-  .canvas-container {
+    position: relative;
     width: 100%;
+    height: var(--mobile-layers-height);
+    border-right: none;
+    border-bottom: 1px solid var(--color-bg-border);
+    transform: none;
+    flex-shrink: 0;
+  }
+
+  .left-sidebar .panel-header {
+    padding: 10px 12px;
   }
 
   .layer-list {
     padding: 6px;
+    max-height: calc(var(--mobile-layers-height) - 50px);
   }
 
   .layer-item {
     padding: 8px 10px;
   }
 
-  .panel-header {
-    padding: 12px;
+  /* Canvas - Takes remaining space */
+  .canvas-container {
+    flex: 1;
+    min-height: 200px;
+    overflow: auto;
+  }
+
+  /* Properties - Fixed height at bottom */
+  .right-sidebar {
+    position: relative;
+    width: 100%;
+    height: var(--mobile-properties-height);
+    border-left: none;
+    border-top: 1px solid var(--color-bg-border);
+    transform: none;
+    flex-shrink: 0;
+  }
+
+  .right-sidebar .panel-header {
+    padding: 10px 12px;
+  }
+
+  .properties-content {
+    padding: 10px;
+    max-height: calc(var(--mobile-properties-height) - 50px);
+  }
+
+  .property-section {
+    margin-bottom: 16px;
   }
 }
 
 /* Mobile - 480px and below */
 @media screen and (max-width: 480px) {
   :root {
-    --sidebar-width: 100%;
-    --properties-width: 100%;
     --grid-size: 15px;
+    --mobile-layers-height: 120px;
+    --mobile-properties-height: 200px;
   }
 
   .header {
     padding: var(--space-xs) var(--space-s);
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 8px;
-  }
-
-  .header-left,
-  .header-right {
-    width: 100%;
-    justify-content: space-between;
+    min-height: auto;
   }
 
   .header-left {
@@ -806,8 +840,6 @@ body.tool-create-mode * {
   }
 
   .header-tools {
-    flex: 1;
-    justify-content: flex-end;
     gap: 3px;
   }
 
@@ -817,43 +849,47 @@ body.tool-create-mode * {
     font-size: 13px;
   }
 
-  .header-right {
-    justify-content: flex-end;
-  }
-
   .header-right .close-canvas {
-    padding: 6px 12px;
+    padding: 6px 10px;
     font-size: 11px;
   }
 
-  /* Full-width sidebars on mobile */
-  .left-sidebar,
+  /* Adjust mobile sections */
+  .left-sidebar {
+    height: var(--mobile-layers-height);
+  }
+
+  .layer-list {
+    max-height: calc(var(--mobile-layers-height) - 45px);
+    padding: 4px;
+  }
+
+  .layer-item {
+    padding: 6px 8px;
+    font-size: 12px;
+  }
+
   .right-sidebar {
-    width: 100%;
-    max-width: 320px;
+    height: var(--mobile-properties-height);
+  }
+
+  .properties-content {
+    padding: 8px;
+    max-height: calc(var(--mobile-properties-height) - 45px);
   }
 
   /* Adjust property inputs for mobile */
   .property-row {
     flex-direction: column;
-    gap: 12px;
+    gap: 10px;
   }
 
   .property-input {
     width: 100%;
   }
 
-  .color-input-group {
-    flex-direction: row;
-  }
-
   .property-section {
-    margin-bottom: 16px;
-  }
-
-  .properties-content,
-  .layer-list {
-    padding: 8px;
+    margin-bottom: 12px;
   }
 
   /* Smaller resize handles on mobile */
@@ -873,10 +909,19 @@ body.tool-create-mode * {
     height: 14px;
     top: -30px;
   }
+
+  .canvas-container {
+    min-height: 150px;
+  }
 }
 
 /* Very small mobile - 360px and below */
 @media screen and (max-width: 360px) {
+  :root {
+    --mobile-layers-height: 100px;
+    --mobile-properties-height: 180px;
+  }
+
   .header-left {
     gap: 8px;
   }
@@ -904,11 +949,12 @@ body.tool-create-mode * {
   }
 
   .layer-item {
-    padding: 6px 8px;
+    padding: 6px;
+    font-size: 11px;
   }
 
   .layer-name {
-    font-size: 12px;
+    font-size: 11px;
   }
 
   input[type="text"],
@@ -921,12 +967,25 @@ body.tool-create-mode * {
   .property-label {
     font-size: 10px;
   }
+
+  .layer-list {
+    max-height: calc(var(--mobile-layers-height) - 40px);
+  }
+
+  .properties-content {
+    max-height: calc(var(--mobile-properties-height) - 40px);
+  }
 }
 
 /* Landscape mobile orientation */
 @media screen and (max-height: 500px) and (orientation: landscape) {
+  :root {
+    --mobile-layers-height: 80px;
+    --mobile-properties-height: 120px;
+  }
+
   .header {
-    min-height: 48px;
+    min-height: 44px;
     padding: 4px 8px;
   }
 
@@ -935,17 +994,20 @@ body.tool-create-mode * {
     height: 28px;
   }
 
-  .left-sidebar,
-  .right-sidebar {
-    max-width: 240px;
-  }
-
   .panel-header {
-    padding: 10px;
+    padding: 8px 10px;
   }
 
   .property-section {
-    margin-bottom: 12px;
+    margin-bottom: 10px;
+  }
+
+  .layer-list {
+    max-height: calc(var(--mobile-layers-height) - 35px);
+  }
+
+  .properties-content {
+    max-height: calc(var(--mobile-properties-height) - 35px);
   }
 }
 
@@ -954,13 +1016,13 @@ body.tool-create-mode * {
   .tool-btn,
   .layer-action-btn,
   .close-btn {
-    min-height: 44px;
-    min-width: 44px;
+    min-height: 40px;
+    min-width: 40px;
   }
 
   .layer-item {
-    padding: 12px;
-    margin-bottom: 6px;
+    padding: 10px;
+    margin-bottom: 4px;
   }
 
   .resize-handle {
