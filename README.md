@@ -1,8 +1,4 @@
-Understood. Below is a **clean, professional, recruiter-grade `README.md`** tailored exactly to your project, constraints, and the **Sheryians Coding School Figma-Style Design Tool challenge**.
 
-You can copy-paste this directly as `README.md`.
-
----
 
 # Figma-Style Design Tool (DOM-Only)
 
